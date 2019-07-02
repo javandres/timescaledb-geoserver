@@ -12,6 +12,8 @@ services:
        - postgres:/data/postgres
     ports:
       - "15432:5432"
+    expose:
+      - "15432"
     networks:
       - postgres
     restart: unless-stopped
@@ -25,7 +27,7 @@ services:
     volumes:
        - pgadmin:/root/.pgadmin
     ports:
-      - "${PGADMIN_PORT:-5050}:80"
+      - "${PGADMIN_PORT:-8500}:80"
     networks:
       - postgres
     restart: unless-stopped
@@ -42,6 +44,19 @@ services:
       networks:
         - postgres  
 
+  webspoon:
+    image: hiromuhota/webspoon
+    ports:
+      - "8700:8080"
+    volumes:
+      - kettle:/home/tomcat/.kettle
+      - pentaho:/home/tomcat/.pentaho
+      - ../data:/home/tomcat/.kettle/data
+    environment:
+      - "JAVA_OPTS=-Xms1024m -Xmx2048m"
+    networks:
+        - postgres         
+
 networks:
   postgres:
     driver: bridge
@@ -50,3 +65,5 @@ volumes:
     postgres:
     pgadmin:
     geoserver-data:
+    kettle:
+    pentaho:
