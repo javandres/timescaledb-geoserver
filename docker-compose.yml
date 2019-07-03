@@ -57,6 +57,20 @@ services:
       - "JAVA_OPTS=-Xms1024m -Xmx2048m"
     networks:
         - postgres         
+  
+  grafana:
+    image: grafana/grafana:6.1.6
+    container_name: grafana
+    depends_on:
+      - postgis
+    ports:
+      - "8800:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-worldmap-panel,neocat-cal-heatmap-panel,petrslavotinek-carpetplot-panel,mtanda-heatmap-epoch-panel, natel-usgs-datasource, snuids-radar-panel, natel-plotly-panel, briangann-datatable-panel
+    volumes:
+      - grafana:/var/lib/grafana     
+    networks:
+        - postgres    
 
 networks:
   postgres:
@@ -68,3 +82,4 @@ volumes:
     geoserver-data:
     kettle:
     pentaho:
+    grafana:
